@@ -16,14 +16,31 @@
   --s03-box-text-y:-28px;         /* S3: shared vertical offset for both box text groups */
   --s03-left-box-text-y:var(--s03-box-text-y);
   --s03-right-box-text-y:var(--s03-box-text-y);
+  --s03-body-y:-70px;               /* S3: body vertical offset */
+  --s03-bottom-note-y:-80px;        /* S3: bottom note vertical offset */
+  --s02-body-y:-40px;               /* S2: body vertical offset */
   --s04-store-marker-x:27%;       /* S4: store marker horizontal position */
-  --s04-store-marker-y:60%;       /* S4: store marker vertical position */
+  --s04-store-marker-y:59%;       /* S4: store marker vertical position */
   --s04-store-marker-size:64px;   /* S4: store marker size */
-  --s04-station-label-x:55%;      /* S4: station label horizontal position */
-  --s04-station-label-y:35%;      /* S4: station label vertical position */
+  --s04-station-label-x:50%;      /* S4: station label horizontal position */
+  --s04-station-label-y:32%;      /* S4: station label vertical position */
   --s04-station-label-width:180px;
   --s04-station-label-height:48px;
   --s04-station-label-font-size:26px;
+  --s04-left-content-y:-80px;       /* S4: left content vertical offset */
+  --s04-store-photo-x:-10px;  /* 画像全体を左へ */
+  --s04-store-photo-x:10px;   /* 画像全体を右へ */
+  --s04-store-photo-y:-20px;  /* 画像全体を上へ */
+  --s04-store-photo-y:20px;   /* 画像全体を下へ */
+  --s04-store-photo-height:720px; /* S4: store photo frame height */
+  --s04-store-photo-width:880px;
+  --s04-store-photo-object-x:30%; /* S4: store photo horizontal crop position */
+  --s04-store-photo-object-y:20%; /* S4: store photo vertical crop position */
+  --s04-store-photo-scale:1;      /* S4: store photo scale */
+  --s05-purpose-card-height:760px; /* S5: shared height for purpose cards */
+  --s05-purpose-card1-height:var(--s05-purpose-card-height);
+  --s05-purpose-card2-height:var(--s05-purpose-card-height);
+  --s05-purpose-card3-height:var(--s05-purpose-card-height);
   --s06-body-y:0px;               /* S6: vertical offset for the whole chart body */
   --s06-legend-y:70px;             /* S6: vertical offset for the legend */
   --s06-chart-y:-120px;              /* S6: vertical offset for the bar chart */
@@ -32,6 +49,30 @@
   --s07-step-card-padding-top:60px; /* S7: shared inner top spacing for step cards */
   --s07-step-row-y:-60px;         /* S7: vertical offset for the full card/arrow row */
   --s07-note-y:-100px;             /* S7: vertical offset for the bottom note */
+  --s14-lead-text-y:-30px;          /* S14: lead text vertical offset */
+  --s14-box-row-y:-30px;            /* S14: box row vertical offset */
+  --s14-bottom-message-y:0px;     /* S14: bottom message vertical offset */
+  --s17-lead-text-y:-60px;          /* S17: lead text vertical offset */
+  --s17-cards-row-y:-50px;          /* S17: three-card row vertical offset */
+  --s17-card1-y:0px;              /* S17: card 1 vertical offset */
+  --s17-card2-y:0px;              /* S17: card 2 vertical offset */
+  --s17-card3-y:0px;              /* S17: card 3 vertical offset */
+  --s17-card-top-y:40px;            /* S17: shared vertical offset for upper card text group */
+  --s17-card-bottom-y:110px;         /* S17: shared vertical offset for lower card text group */
+  --s17-card1-top-y:var(--s17-card-top-y);
+  --s17-card1-bottom-y:var(--s17-card-bottom-y);
+  --s17-card2-top-y:var(--s17-card-top-y);
+  --s17-card2-bottom-y:var(--s17-card-bottom-y);
+  --s17-card3-top-y:var(--s17-card-top-y);
+  --s17-card3-bottom-y:var(--s17-card-bottom-y);
+  --s18-flow-y:0px;               /* S18: left image frame vertical position */
+  --s18-handover-y:0px;           /* S18: right image frame vertical position */
+  --s18-flow-height:530px;        /* S18: left image frame height */
+  --s18-handover-height:530px;    /* S18: right image frame height */
+  --s18-flow-object-y:20%;        /* S18: left image vertical crop position */
+  --s18-handover-object-y:20%;    /* S18: right image vertical crop position */
+  --s18-flow-scale:1;f--s18-flow-object-y:50%;             /* S18: left image scale */
+  --s18-handover-scale:1;         /* S18: right image scale */
 
   /* Legacy aliases kept for existing inline styles in index.html. */
   --n:var(--color-green-main);
@@ -205,6 +246,12 @@ section.sbrk{
 
 /* Slide-Specific Adjustments */
 
+/* S2: body vertical position */
+.s02 .s02-body{
+  position:relative;
+  top:var(--s02-body-y);
+}
+
 /* S2: Quote text alignment */
 .s02-quote{
   display:flex;
@@ -214,6 +261,22 @@ section.sbrk{
 .s02-quote-line{display:block}
 .s02-quote-line-left{text-align:left}
 .s02-quote-line-right{text-align:right}
+
+/* S3: body vertical position */
+.s03 .s03-body{
+  position:relative;
+  top:var(--s03-body-y);
+}
+
+/* S3: bottom note position */
+.s03 .s03-bottom-note{
+  position:absolute;
+  bottom:72px;
+  left:0;
+  right:0;
+  text-align:center;
+  transform:translateY(var(--s03-bottom-note-y));
+}
 
 /* S3: Basic stance box text position
    Change --s03-box-text-y to move both box text groups up/down together. */
@@ -264,6 +327,60 @@ section.sbrk{
   white-space:nowrap;
 }
 
+/* S4: left content position */
+.s04 .s04-left-content{
+  position:relative;
+  top:var(--s04-left-content-y);
+}
+
+/* S4: store map photo trim controls
+   --s04-store-photo-height changes the visible bottom edge.
+   --s04-store-photo-y moves the whole frame.
+   --s04-store-photo-object-x / --s04-store-photo-object-y adjust crop.
+   --s04-store-photo-scale adjusts zoom. */
+.s04 .photo-s04-store{
+  flex:1 1 0 !important;
+  height:var(--s04-store-photo-height) !important;
+  flex:0 0 var(--s04-store-photo-width) !important;
+  min-height:0 !important;
+  max-height:var(--s04-store-photo-height) !important;
+  position:relative;
+  top:var(--s04-store-photo-y);
+  left:var(--s04-store-photo-x);
+  overflow:hidden !important;
+}
+
+.s04 .photo-s04-store .photo-cover{
+  width:100% !important;
+  height:100% !important;
+  display:block;
+  object-fit:cover;
+  object-position:var(--s04-store-photo-object-x) var(--s04-store-photo-object-y);
+  transform:scale(var(--s04-store-photo-scale));
+  transform-origin:center center;
+}
+
+/* S5: Purpose card height adjustments
+   Use these variables to shrink or grow the three cards together or individually:
+   --s05-purpose-card-height,
+   --s05-purpose-card1-height,
+   --s05-purpose-card2-height,
+   --s05-purpose-card3-height. */
+.s05 .s05-purpose-card{
+  height:var(--s05-purpose-card-height) !important;
+  min-height:0 !important;
+  box-sizing:border-box;
+}
+.s05 .s05-purpose-card-1{
+  height:var(--s05-purpose-card1-height) !important;
+}
+.s05 .s05-purpose-card-2{
+  height:var(--s05-purpose-card2-height) !important;
+}
+.s05 .s05-purpose-card-3{
+  height:var(--s05-purpose-card3-height) !important;
+}
+
 /* S6: Chart layout vertical adjustments
    Use top instead of transform to avoid conflict with entrance animation.
    Change these variables to adjust each area:
@@ -293,8 +410,117 @@ section.sbrk{
 /* S7: Bottom note vertical position */
 .s07-note{transform:translateY(var(--s07-note-y))}
 
+/* S14: Layout position adjustments
+   Use these variables to shift the three vertical groups:
+   --s14-lead-text-y, --s14-box-row-y, --s14-bottom-message-y. */
+.s14 .s14-lead-text{
+  position:relative;
+  top:var(--s14-lead-text-y);
+}
+.s14 .s14-box-row{
+  position:relative;
+  top:var(--s14-box-row-y);
+}
+.s14 .s14-bottom-message{
+  position:relative;
+  top:var(--s14-bottom-message-y);
+}
+
+/* S17: Layout position adjustments
+   Use these variables to shift the lead text, card row, whole cards, and upper/lower text groups:
+   --s17-lead-text-y, --s17-cards-row-y,
+   --s17-card1-y, --s17-card2-y, --s17-card3-y,
+   --s17-card-top-y, --s17-card-bottom-y,
+   --s17-card1-top-y, --s17-card1-bottom-y,
+   --s17-card2-top-y, --s17-card2-bottom-y,
+   --s17-card3-top-y, --s17-card3-bottom-y. */
+.s17 .s17-lead-text{
+  position:relative;
+  top:var(--s17-lead-text-y);
+}
+.s17 .s17-cards-row{
+  position:relative;
+  top:var(--s17-cards-row-y);
+}
+.s17 .s17-card{gap:0 !important}
+.s17 .s17-card-1{
+  position:relative;
+  top:var(--s17-card1-y);
+}
+.s17 .s17-card-2{
+  position:relative;
+  top:var(--s17-card2-y);
+}
+.s17 .s17-card-3{
+  position:relative;
+  top:var(--s17-card3-y);
+}
+.s17 .s17-card-top{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  position:relative;
+  top:var(--s17-card-top-y);
+}
+.s17 .s17-card-bottom{
+  position:relative;
+  top:var(--s17-card-bottom-y);
+}
+.s17 .s17-card-1 .s17-card-top{top:var(--s17-card1-top-y)}
+.s17 .s17-card-1 .s17-card-bottom{top:var(--s17-card1-bottom-y)}
+.s17 .s17-card-2 .s17-card-top{top:var(--s17-card2-top-y)}
+.s17 .s17-card-2 .s17-card-bottom{top:var(--s17-card2-bottom-y)}
+.s17 .s17-card-3 .s17-card-top{top:var(--s17-card3-top-y)}
+.s17 .s17-card-3 .s17-card-bottom{top:var(--s17-card3-bottom-y)}
+
+/* S18: Photo trimming and position adjustments
+   --s18-flow-y: left image frame vertical position
+   --s18-handover-y: right image frame vertical position
+   --s18-flow-height: left image frame height
+   --s18-handover-height: right image frame height
+   --s18-flow-object-y: left image vertical crop position
+   --s18-handover-object-y: right image vertical crop position
+   --s18-flow-scale: left image scale
+   --s18-handover-scale: right image scale */
+.s18 .photo-s18-flow{
+  flex:0 0 var(--s18-flow-height) !important;
+  height:var(--s18-flow-height) !important;
+  min-height:0 !important;
+  max-height:var(--s18-flow-height) !important;
+  position:relative;
+  top:var(--s18-flow-y);
+  overflow:hidden !important;
+}
+.s18 .photo-s18-handover{
+  flex:0 0 var(--s18-handover-height) !important;
+  height:var(--s18-handover-height) !important;
+  min-height:0 !important;
+  max-height:var(--s18-handover-height) !important;
+  position:relative;
+  top:var(--s18-handover-y);
+  overflow:hidden !important;
+}
+.s18 .photo-s18-flow .photo-cover{
+  width:100% !important;
+  height:100% !important;
+  display:block;
+  object-fit:cover;
+  object-position:center var(--s18-flow-object-y);
+  transform:scale(var(--s18-flow-scale));
+  transform-origin:center center;
+}
+.s18 .photo-s18-handover .photo-cover{
+  width:100% !important;
+  height:100% !important;
+  display:block;
+  object-fit:cover;
+  object-position:center var(--s18-handover-object-y);
+  transform:scale(var(--s18-handover-scale));
+  transform-origin:center center;
+}
+
 /* Photo Frames
-   Keep images as <img>. Adjust object-position here for photo cropping. */
+   Keep images as <img>. Adjust object-positfion here for photo cropping. */
 .photo-frame{
   position:relative;
   overflow:hidden;
@@ -314,22 +540,8 @@ section.sbrk{
 /* S2 intro photo */
 .photo-s02-intro .photo-cover{object-position:center top}
 
-/* S4 store/location photo */
-.photo-s04-store .photo-cover{
-  object-position:center center;
-  object-position:30% center;
-  transform:scale(1.0);
-  transform-origin:center center;
-}
-
 /* Photo tint overlays — disabled to preserve source image colors */
 .photo-tint-overlay{display:none;}
-
-/* S18 flow explanation photo */
-.photo-s18-flow .photo-cover{object-position:center center}
-
-/* S18 handover photo */
-.photo-s18-handover .photo-cover{object-position:center center}
 
 /* S19 summary photo */
 .photo-s19-summary .photo-cover{
