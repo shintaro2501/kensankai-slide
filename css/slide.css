@@ -1,0 +1,514 @@
+/* Base / Variables
+   Main color tokens. Edit these values first when changing the slide theme. */
+:root{
+  --color-green-main:#005c28;   /* Main dark green: headers, primary text accents */
+  --color-green-sub:#1a7a42;    /* Sub green: secondary accents */
+  --color-green-light:#57b07a;  /* Light green: charts and soft emphasis */
+  --color-green-pale:#e5f5ec;   /* Pale green: highlighted backgrounds */
+  --color-text-main:#0f1a12;    /* Main text */
+  --color-text-muted:#374d3f;   /* Muted text */
+  --color-text-light:#638070;   /* Light captions and page numbers */
+  --color-bg:#fff;              /* Slide background */
+  --color-bg-soft:#f0f8f4;      /* Soft card background */
+  --color-border:#b2d5c0;       /* Card and dashed borders */
+  --color-divider:#d8ece1;      /* Divider lines */
+
+  --s02-left-content-y:-70px;        /* S2: 左側テキストグループの上下位置 */
+  --s02-right-photo-y:-60px;         /* S2: 右側画像フレームの上下位置 */
+
+  --s03-cards-row-y:-80px;           /* S3: 2つのボックス行全体の上下位置 */
+  --s03-bottom-text-y:-80px;         /* S3: 最下部テキストの上下位置（正値=上、負値=下） */
+  --s03-box-text-y:-28px;         /* S3: shared vertical offset for both box text groups */
+  --s03-left-box-text-y:var(--s03-box-text-y);
+  --s03-right-box-text-y:var(--s03-box-text-y);
+  --s04-store-marker-x:27%;       /* S4: store marker horizontal position */
+  --s04-store-marker-y:60%;       /* S4: store marker vertical position */
+  --s04-store-marker-size:64px;   /* S4: store marker size */
+  --s04-station-label-x:55%;      /* S4: station label horizontal position */
+  --s04-station-label-y:35%;      /* S4: station label vertical position */
+  --s04-station-label-width:180px;
+  --s04-station-label-height:48px;
+  --s04-station-label-font-size:26px;
+  --s04-left-content-y:-80px;      /* S4: vertical offset for the left text group */
+  --s04-photo-width:820px;          /* S4: 画像フレームの横幅 */
+  --s04-photo-height:756px;         /* S4: 画像フレームの縦幅 */
+  --s04-photo-x:0px;                /* S4: 画像フレーム全体の左右位置 */
+  --s04-photo-y:0px;                /* S4: 画像フレーム全体の上下位置 */
+  --s04-photo-scale:1.0;            /* S4: 画像の拡大率（トリミング用） */
+  --s04-photo-position:30% center;  /* S4: 画像の表示位置（X大きいほど左へ） */
+  --s05-purpose-card-height:500px; /* S5: shared height for the three purpose cards */
+  --s05-purpose-card-padding-y:30px;
+  --s05-purpose-body-y:-50px;      /* S5: vertical offset for the whole card row */
+  --s06-body-y:0px;               /* S6: vertical offset for the whole chart body */
+  --s06-legend-y:70px;             /* S6: vertical offset for the legend */
+  --s06-chart-y:-120px;              /* S6: vertical offset for the bar chart */
+  --s06-note-y:-80px;               /* S6: vertical offset for the bottom note */
+  --s07-step-card-height:390px;   /* S7: shared height for the three step cards */
+  --s07-step-card-padding-top:60px; /* S7: shared inner top spacing for step cards */
+  --s07-step-row-y:-60px;         /* S7: vertical offset for the full card/arrow row */
+  --s07-note-y:-100px;             /* S7: vertical offset for the bottom note */
+  --s07-note-font-size:32px;       /* S7: bottom note font size */
+  --s09-content-y:-30px;          /* S9: vertical offset for the main content group */
+  --s10-content-y:-30px;          /* S10: vertical offset for the card group */
+  --s11-card-height:500px;        /* S11: shared height for the three cards */
+  --s11-cards-y:90px;              /* S11: vertical offset for the card group */
+  --s11-text-y:-90px;               /* S11: vertical offset for the bottom text */
+  --s11-in-nbdg-y:-30px;            /* 丸数字の上下位置 */
+  --s11-in-title-y:-20px;           /* タイトルの上下位置 */
+  --s11-in-body-y:10px;            /* 内容説明テキストの上下位置 */
+
+  --s18-body-y:-30px;                /* S18: コンテンツ全体の上下位置 */
+
+  --s19-photo-width:780px;            /* S19: フレームの横幅 */
+  --s19-photo-height:780px;           /* S19: フレームの縦幅（autoでstretch） */
+  --s19-photo-x:0px;                /* S19: フレーム全体の左右位置 */
+  --s19-photo-y:-20px;                /* S19: フレーム全体の上下位置 */
+  --s19-photo-scale:1.03;              /* S19: 画像の拡大率（大きいほどトリミングが強くなる） */
+  --s19-photo-position:30% center;   /* S19: X値 0%=左端 / 50%=中央 / 100%=右端 */
+  --s19-left-content-y:-80px;          /* S19: 左側テキストグループの上下位置 */
+  --s19-bottom-box-y:90px;            /* S19: 最下部強調ブロックの上下位置 */
+
+  --s20-top-text-y:-50px;              /* S20: 上部導入テキストの上下位置 */
+  --s20-cards-y:-20px;                 /* S20: 3つボックスグループの上下位置 */
+
+  --s21-photo-width:1100px;         /* S21: フレームの横幅 */
+  --s21-photo-height:780px;         /* S21: フレームの縦幅 */
+  --s21-photo-y:10px;                /* S21: フレーム全体の上下位置 */
+  --s21-photo-scale:1.0;            /* S21: 画像の拡大率（トリミング用） */
+  --s21-photo-position:center center; /* S21: 画像の表示位置調整 */
+
+  /* Legacy aliases kept for existing inline styles in index.html. */
+  --n:var(--color-green-main);
+  --nm:var(--color-green-sub);
+  --b:var(--color-green-sub);
+  --bm:var(--color-green-light);
+  --bp:var(--color-green-pale);
+  --t:var(--color-text-main);
+  --tm:var(--color-text-muted);
+  --tl:var(--color-text-light);
+  --bg:var(--color-bg);
+  --bga:var(--color-bg-soft);
+  --bd:var(--color-border);
+  --dv:var(--color-divider);
+}
+
+/* Slide Base */
+section{
+  width:1920px;
+  height:1080px;
+  font-family:'Noto Sans JP',sans-serif;
+  color:var(--color-text-main);
+  background:var(--color-bg);
+  position:relative;
+  overflow:hidden;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Header
+   .sh = slide header bar, .stag = small subtitle inside the header. */
+.sh{
+  background:var(--color-green-main);
+  height:148px;
+  display:flex;
+  align-items:center;
+  padding:0 100px;
+  gap:40px;
+  flex-shrink:0;
+}
+.sh h2{
+  font-size:52px;
+  font-weight:700;
+  color:#fff;
+  margin:0;
+  line-height:1;
+}
+.stag{
+  font-size:26px;
+  color:rgba(255,255,255,.5);
+  border-left:2px solid rgba(255,255,255,.2);
+  padding-left:32px;
+  font-weight:400;
+}
+
+/* Body Layout
+   .sb = slide body, .pn = page number, .col/.f1/.f2 = simple flex helpers. */
+.sb{
+  flex:1;
+  padding:56px 100px;
+  display:flex;
+  flex-direction:column;
+  gap:36px;
+}
+.pn{
+  position:absolute;
+  bottom:32px;
+  right:60px;
+  font-size:26px;
+  color:var(--color-text-light);
+  font-weight:500;
+}
+section.sbrk{
+  background:var(--color-green-main);
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:20px;
+}
+.col{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+.f1{flex:1}
+.f2{flex:2}
+
+/* Cards
+   .ip = image placeholder, .cd = light card, .cdn = dark card, .cdb = bordered card. */
+.ip{
+  background:repeating-linear-gradient(-45deg,#cde5d7 0,#cde5d7 8px,#e4f2eb 8px,#e4f2eb 16px);
+  border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#4e7a5e;
+  font-size:26px;
+  text-align:center;
+  line-height:1.8;
+}
+.cd{
+  background:var(--color-bg-soft);
+  border:1.5px solid var(--color-border);
+  border-radius:12px;
+  padding:44px 52px;
+}
+.cdn{
+  background:var(--color-green-main);
+  border-radius:12px;
+  padding:44px 52px;
+  color:#fff;
+}
+.cdb{
+  background:var(--color-green-pale);
+  border:2px solid var(--color-green-sub);
+  border-radius:12px;
+  padding:40px 48px;
+}
+.nbdg{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:var(--color-green-sub);
+  color:#fff;
+  font-size:32px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+/* Lists */
+.ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.ul li{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  font-size:36px;
+  line-height:1.5;
+}
+.ul li::before{
+  content:'';
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:rgba(255,255,255,.5);
+  flex-shrink:0;
+  margin-top:13px;
+}
+
+/* Utility Classes
+   Short class names are retained because index.html already uses them. */
+.cn{color:var(--color-green-main)}
+.cb{color:var(--color-green-sub)}
+.cw{color:#fff}
+.ctm{color:var(--color-text-muted)}
+.ctl{color:var(--color-text-light)}
+.fw6{font-weight:600}
+.fw7{font-weight:700}
+.fw9{font-weight:900}
+
+/* Slide-Specific Adjustments */
+
+/* S2: Left/right group vertical position */
+.s02-left-content{
+  position:relative;
+  top:var(--s02-left-content-y);
+}
+.s02-right-photo{
+  position:relative;
+  top:var(--s02-right-photo-y);
+}
+
+/* S3: Cards row and bottom text position */
+.s03-cards-row{
+  position:relative;
+  top:var(--s03-cards-row-y);
+}
+.s03-bottom-text{
+  position:absolute;
+  bottom:calc(72px - var(--s03-bottom-text-y));
+  left:0;right:0;
+}
+
+/* S2: Quote text alignment */
+.s02-quote{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.s02-quote-line{display:block}
+.s02-quote-line-left{text-align:left}
+.s02-quote-line-right{text-align:right}
+
+/* S3: Basic stance box text position
+   Change --s03-box-text-y to move both box text groups up/down together. */
+.s03-box-text{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+.s03-left-box-text{transform:translateY(var(--s03-left-box-text-y))}
+.s03-right-box-text{transform:translateY(var(--s03-right-box-text-y))}
+
+/* S4: Store location marker */
+.s04-store-marker{
+  position:absolute;
+  left:var(--s04-store-marker-x);
+  top:var(--s04-store-marker-y);
+  width:var(--s04-store-marker-size);
+  height:var(--s04-store-marker-size);
+  transform:translate(-50%, -50%);
+  z-index:3;
+  pointer-events:none;
+}
+.s04-station-label{
+  position:absolute;
+  left:var(--s04-station-label-x);
+  top:var(--s04-station-label-y);
+  width:var(--s04-station-label-width);
+  height:var(--s04-station-label-height);
+  transform:translate(-50%, -50%);
+  z-index:4;
+
+  background:#fff;
+  color:var(--color-green-main);
+  border:2px solid var(--color-green-main);
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
+
+  font-size:var(--s04-station-label-font-size);
+  font-weight:700;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-bottom:4px;
+  border-radius:4px;
+  box-sizing:border-box;
+  pointer-events:none;
+  white-space:nowrap;
+}
+
+/* S4: Move the left-side content group up/down together. */
+.s04-left-content{
+  justify-content:center;
+  gap:40px;
+  position:relative;
+  top:var(--s04-left-content-y);
+}
+
+/* S5: Purpose composition card size and vertical alignment
+   Change these variables to adjust all three cards together:
+   --s05-purpose-card-height, --s05-purpose-card-padding-y, --s05-purpose-body-y. */
+.s05-purpose-body{
+  align-items:center;
+  justify-content:center;
+  padding-top:0;
+  padding-bottom:0;
+  position:relative;
+  top:var(--s05-purpose-body-y);
+}
+.s05-purpose-card{
+  height:var(--s05-purpose-card-height);
+  min-height:0;
+  box-sizing:border-box;
+  padding:var(--s05-purpose-card-padding-y) 48px;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:14px;
+}
+
+/* S6: Chart layout vertical adjustments
+   Use top instead of transform to avoid conflict with entrance animation.
+   Change these variables to adjust each area:
+   --s06-body-y, --s06-legend-y, --s06-chart-y, --s06-note-y. */
+.s06-body{
+  position:relative;
+  top:var(--s06-body-y);
+}
+.s06-legend,
+.s06-chart,
+.s06-note{
+  position:relative;
+}
+.s06-legend{top:var(--s06-legend-y)}
+.s06-chart{top:var(--s06-chart-y)}
+.s06-note{top:var(--s06-note-y)}
+
+/* S7: Shinkansen arrival step card size and inner top spacing
+   Change these variables to adjust all three cards together:
+   --s07-step-card-height and --s07-step-card-padding-top. */
+.s07-step-row{transform:translateY(var(--s07-step-row-y))}
+.s07-step-card{
+  height:var(--s07-step-card-height) !important;
+  padding-top:var(--s07-step-card-padding-top) !important;
+}
+
+/* S7: Bottom note vertical position */
+.s07-note{transform:translateY(var(--s07-note-y))}
+
+/* S9: Main content vertical position */
+.s09-main-content{
+  position:relative;
+  top:var(--s09-content-y);
+}
+
+/* S10: Card group vertical position */
+.s10-cards-container{
+  position:relative;
+  top:var(--s10-content-y);
+}
+
+/* S11: Card height and vertical positioning */
+.s11-cards-container{
+  position:relative;
+  top:var(--s11-cards-y);
+}
+.s11-card{
+  flex:1;
+}
+.s11-in-nbdg{
+  position:relative;
+  top:var(--s11-in-nbdg-y);
+}
+.s11-in-title{
+  position:relative;
+  top:var(--s11-in-title-y);
+}
+.s11-in-body{
+  position:relative;
+  top:var(--s11-in-body-y);
+}
+.s11-bottom-text{
+  position:relative;
+  top:var(--s11-text-y);
+}
+
+/* Photo Frames
+   Keep images as <img>. Adjust object-position here for photo cropping. */
+.photo-frame{
+  position:relative;
+  overflow:hidden;
+}
+.photo-cover{
+  object-fit:cover;
+}
+
+/* S1 title photo */
+.photo-s01-title .photo-cover{
+  object-position:center center;
+  object-position:38% center;
+  transform:scale(1.3);
+  transform-origin:center center;
+}
+
+/* S2 intro photo */
+.photo-s02-intro .photo-cover{object-position:center top}
+
+/* S4 store/location photo */
+.photo-s04-store .photo-cover{
+  object-position:var(--s04-photo-position);
+  transform:scale(var(--s04-photo-scale));
+  transform-origin:center center;
+}
+
+/* S18 body content group */
+.s18-body{
+  position:relative;
+  top:var(--s18-body-y);
+}
+
+/* S18 flow explanation photo */
+.photo-s18-flow .photo-cover{object-position:center center}
+
+/* S18 handover photo */
+.photo-s18-handover .photo-cover{object-position:center center}
+
+/* S19 summary photo */
+.photo-s19-summary .photo-cover{
+  object-position:var(--s19-photo-position);
+  transform:scale(var(--s19-photo-scale));
+  transform-origin:center center;
+}
+
+/* S19 left content group */
+.s19-left-content{
+  position:relative;
+  top:var(--s19-left-content-y);
+}
+
+/* S19 bottom emphasis box */
+.s19-bottom-box{
+  position:relative;
+  top:var(--s19-bottom-box-y);
+}
+
+/* S20 top intro text */
+.s20-top-text{
+  position:relative;
+  top:var(--s20-top-text-y);
+}
+
+/* S20 three-box cards row */
+.s20-cards-container{
+  position:relative;
+  top:var(--s20-cards-y);
+}
+
+/* S21 staff photo */
+.photo-s21-staff .photo-cover{
+  transform:scale(var(--s21-photo-scale));
+  transform-origin:center center;
+  object-position:var(--s21-photo-position);
+}
+
+/* Animation */
+@media(prefers-reduced-motion:no-preference){
+  section[data-deck-active] .sb>*{animation:fu .35s ease both}
+  section[data-deck-active] .sb>*:nth-child(1){animation-delay:.05s}
+  section[data-deck-active] .sb>*:nth-child(2){animation-delay:.12s}
+  section[data-deck-active] .sb>*:nth-child(3){animation-delay:.19s}
+  section[data-deck-active] .sb>*:nth-child(4){animation-delay:.26s}
+  @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+}

@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "export:slides": "node scripts/export-slides.js",
+    "export:slide": "node scripts/export-slides.js --only"
+  },
+  "devDependencies": {
+    "playwright": "^1.54.0"
+  }
+}
