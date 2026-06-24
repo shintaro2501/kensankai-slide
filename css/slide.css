@@ -57,6 +57,16 @@
   --s11-in-title-y:-20px;           /* タイトルの上下位置 */
   --s11-in-body-y:10px;            /* 内容説明テキストの上下位置 */
 
+  --s13-right-content-y: 0px;      /* S13: 右側コンテンツ全体の上下位置 */
+  --s13-box-gap: 24px;             /* S13: 分割したボックス間の余白量 */
+
+  --s17-top-text-y: -80px;           /* S17: 上部導入テキストの上下位置 */
+  --s17-cards-height: 530px;         /* S17: 3つのカードボックス自体の縦幅（高さ） */
+  --s17-cards-row-y: -60px;            /* S17: 3つのボックス列（行全体）の上下位置 */
+  --s17-element-title-y: 0px;        /* S17: 各カード内 タイトル行の上下位置 */
+  --s17-element-desc-y: 0px;         /* S17: 各カード内 従来説明の上下位置 */
+  --s17-element-result-y: 15px;       /* S17: 各カード内 改善後ブロックの上下位置 */
+
   --s18-body-y:-30px;                /* S18: コンテンツ全体の上下位置 */
 
   --s19-photo-width:780px;            /* S19: フレームの横幅 */
@@ -69,7 +79,11 @@
   --s19-bottom-box-y:90px;            /* S19: 最下部強調ブロックの上下位置 */
 
   --s20-top-text-y:-50px;              /* S20: 上部導入テキストの上下位置 */
-  --s20-cards-y:-20px;                 /* S20: 3つボックスグループの上下位置 */
+  --s20-cards-height: 580px;           /* S20: 3つのカードボックス自体の縦幅（高さ） */
+  --s20-cards-row-y: -40px;              /* S20: 3つのボックス列（行全体）の上下位置 */
+  --s20-element-title-y: 0px;          /* S20: 各カード内 タイトル行の上下位置 */
+  --s20-element-desc-y: 0px;           /* S20: 各カード内 従来説明の上下位置 */
+  --s20-element-result-y: 30px;         /* S20: 各カード内 改善後ブロックの上下位置 */
 
   --s21-photo-width:1100px;         /* S21: フレームの横幅 */
   --s21-photo-height:780px;         /* S21: フレームの縦幅 */
@@ -453,6 +467,48 @@ section.sbrk{
   transform-origin:center center;
 }
 
+/* S13 right content */
+.s13-right-content{
+  position:relative;
+  top:var(--s13-right-content-y);
+  display:flex;
+  flex-direction:column;
+  gap:var(--s13-box-gap);
+}
+
+/* S17 top intro text */
+.s17-top-text{
+  position:relative;
+  top:var(--s17-top-text-y);
+}
+
+/* S17 three-box cards row */
+.s17-cards-container{
+  position:relative;
+  top:var(--s17-cards-row-y);
+}
+.s17-cards-container > .cd {
+  height: var(--s17-cards-height);
+  box-sizing: border-box;
+}
+.s17-inner-title {
+  position: relative;
+  top: var(--s17-element-title-y);
+  min-height: 100px;
+}
+.s17-inner-desc {
+  position: relative;
+  top: var(--s17-element-desc-y);
+  min-height: 90px;
+}
+.s17-inner-result {
+  position: relative;
+  top: var(--s17-element-result-y);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 /* S18 body content group */
 .s18-body{
   position:relative;
@@ -493,7 +549,30 @@ section.sbrk{
 /* S20 three-box cards row */
 .s20-cards-container{
   position:relative;
-  top:var(--s20-cards-y);
+  top:var(--s20-cards-row-y);
+}
+.s20-cards-container > .cd {
+  height: var(--s20-cards-height);
+  box-sizing: border-box;
+}
+
+/* S20 inner card elements — variable-controlled vertical alignment */
+.s20-inner-title {
+  position: relative;
+  top: var(--s20-element-title-y);
+  min-height: 100px; /* カード間での高さ揃えの担保 */
+}
+.s20-inner-desc {
+  position: relative;
+  top: var(--s20-element-desc-y);
+  min-height: 90px;  /* カード間での高さ揃えの担保 */
+}
+.s20-inner-result {
+  position: relative;
+  top: var(--s20-element-result-y);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* S21 staff photo */
