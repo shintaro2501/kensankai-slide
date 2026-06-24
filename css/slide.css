@@ -60,6 +60,10 @@
   --s13-right-content-y: 0px;      /* S13: 右側コンテンツ全体の上下位置 */
   --s13-box-gap: 24px;             /* S13: 分割したボックス間の余白量 */
 
+  --s14-top-text-y: 0px;           /* S14: 上部導入テキストの上下位置 */
+  --s14-cards-row-y: 0px;          /* S14: 左右ボックス行全体の上下位置 */
+  --s14-bottom-box-y: 0px;         /* S14: 下段強調ボックスの上下位置 */
+
   --s17-top-text-y: -80px;           /* S17: 上部導入テキストの上下位置 */
   --s17-cards-height: 530px;         /* S17: 3つのカードボックス自体の縦幅（高さ） */
   --s17-cards-row-y: -60px;            /* S17: 3つのボックス列（行全体）の上下位置 */
@@ -474,6 +478,20 @@ section.sbrk{
   display:flex;
   flex-direction:column;
   gap:var(--s13-box-gap);
+}
+
+/* S14 element position controls */
+.s14-top-text{
+  position:relative;
+  top:var(--s14-top-text-y);
+}
+.s14-cards-row{
+  position:relative;
+  top:var(--s14-cards-row-y);
+}
+.s14-bottom-box{
+  position:relative;
+  top:var(--s14-bottom-box-y);
 }
 
 /* S17 top intro text */
