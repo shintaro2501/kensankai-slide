@@ -66,10 +66,15 @@
 
   --s17-top-text-y: -80px;           /* S17: 上部導入テキストの上下位置 */
   --s17-cards-height: 530px;         /* S17: 3つのカードボックス自体の縦幅（高さ） */
-  --s17-cards-row-y: -60px;            /* S17: 3つのボックス列（行全体）の上下位置 */
+  --s17-cards-row-y: -60px;          /* S17: 3つのボックス列（行全体）の上下位置 */
   --s17-element-title-y: 0px;        /* S17: 各カード内 タイトル行の上下位置 */
   --s17-element-desc-y: 0px;         /* S17: 各カード内 従来説明の上下位置 */
   --s17-element-result-y: 15px;       /* S17: 各カード内 改善後ブロックの上下位置 */
+  --s16-in-nbdg-y: 10px;      /* S16: バッジ（丸数字）の上下位置 */
+  --s16-in-title-y: 25px;     /* S16: タイトルテキストの上下位置 */
+  --s16-in-desc-y: 50px;      /* S16: 説明テキストの上下位置 */
+  --s16-card-height: 500px;  /* S16: カードボックスの縦幅 */
+  --s16-cards-y: -60px;      /* S16: カード列全体の上下位置 */
 
   --s18-body-y:-30px;                /* S18: コンテンツ全体の上下位置 */
 
@@ -89,11 +94,17 @@
   --s20-element-desc-y: 0px;           /* S20: 各カード内 従来説明の上下位置 */
   --s20-element-result-y: 30px;         /* S20: 各カード内 改善後ブロックの上下位置 */
 
-  --s21-photo-width:1100px;         /* S21: フレームの横幅 */
-  --s21-photo-height:780px;         /* S21: フレームの縦幅 */
-  --s21-photo-y:10px;                /* S21: フレーム全体の上下位置 */
+  --s21-photo-width:1100px;         /* S21: 未使用（フルブリード化により無効） */
+  --s21-photo-height:780px;         /* S21: 未使用（フルブリード化により無効） */
+  --s21-photo-y:10px;               /* S21: 未使用（フルブリード化により無効） */
   --s21-photo-scale:1.0;            /* S21: 画像の拡大率（トリミング用） */
   --s21-photo-position:center center; /* S21: 画像の表示位置調整 */
+  --s21-side-band-width: 240px;    /* S21: 左右白帯の幅（4:3比率 = 1440px中央配置） */
+  --s21-gradient-height: 350px;    /* S21: グラデーションオーバーレイの高さ */
+  --s21-gradient-mid: rgba(0,92,40,0.65); /* S21: グラデーション中間の不透明度（位置は--s21-gradient-mid-posで調整） */
+  --s21-gradient-mid-pos: 35%;            /* S21: 中間ストップの位置（小さいほど上から早く不透明になる） */
+  --s21-gradient-end: rgba(0,92,40,1.00); /* S21: グラデーション下端の色と不透明度（1.0が完全不透明） */
+  --s21-text-bottom: 50px;        /* S21: テキストブロックの下端位置 */
 
   /* Legacy aliases kept for existing inline styles in index.html. */
   --n:var(--color-green-main);
@@ -509,10 +520,22 @@ section.sbrk{
   height: var(--s17-cards-height);
   box-sizing: border-box;
 }
+.s16-cards-container {
+  position: relative;
+  top: var(--s16-cards-y);
+}
+.s16-cards-container > .cd {
+  height: var(--s16-card-height);
+  box-sizing: border-box;
+}
 .s17-inner-title {
   position: relative;
   top: var(--s17-element-title-y);
-  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
 }
 .s17-inner-desc {
   position: relative;
@@ -525,6 +548,20 @@ section.sbrk{
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+/* S16 card inner element position controls */
+.s16-in-nbdg {
+  position: relative;
+  top: var(--s16-in-nbdg-y);
+}
+.s16-in-title {
+  position: relative;
+  top: var(--s16-in-title-y);
+}
+.s16-in-desc {
+  position: relative;
+  top: var(--s16-in-desc-y);
 }
 
 /* S18 body content group */
