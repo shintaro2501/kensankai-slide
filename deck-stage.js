@@ -665,16 +665,23 @@
       // Capped so a 404'd font URL can't blank the deck indefinitely.
       this.setAttribute('data-fonts-pending', '');
       const reveal = () => this.removeAttribute('data-fonts-pending');
-      // rAF first: fonts.ready is a pre-resolved promise until layout has
-      // resolved the slotted text's font-family and pushed a FontFace into
-      // 'loading'. Reading it here in connectedCallback (parse-time) would
-      // settle the race in a microtask before any font fetch starts.
-      requestAnimationFrame(() => {
-        Promise.race([
-          document.fonts ? document.fonts.ready : Promise.resolve(),
-          new Promise((r) => setTimeout(r, 2000)),
-        ]).then(reveal, reveal);
-      });
+      // In thumbnail-mode iframes (_snthumb), skip the font-loading wait.
+      // The parent page's font is already loaded, so the blank/white flash
+      // during the 2-second cap would be the only visual effect here.
+      if (this.hasAttribute('data-snthumb')) {
+        reveal();
+      } else {
+        // rAF first: fonts.ready is a pre-resolved promise until layout has
+        // resolved the slotted text's font-family and pushed a FontFace into
+        // 'loading'. Reading it here in connectedCallback (parse-time) would
+        // settle the race in a microtask before any font fetch starts.
+        requestAnimationFrame(() => {
+          Promise.race([
+            document.fonts ? document.fonts.ready : Promise.resolve(),
+            new Promise((r) => setTimeout(r, 2000)),
+          ]).then(reveal, reveal);
+        });
+      }
     }
 
     _enableRail() {
@@ -1617,17 +1624,15 @@
         const url = new URL(location.href);
         url.searchParams.set('_snthumb', '1');
         url.hash = '#' + slideNumber;
-
         const host = document.createElement('div');
         host.style.cssText = 'position:absolute;inset:0;background:#fff;';
-
         const iframe = document.createElement('iframe');
         iframe.src = url.href;
-        iframe.loading = 'lazy';
+        // Omit loading='lazy': iframe renders as soon as the IntersectionObserver
+        // materializes it, so browser-level lazy-load would only add blank time.
         iframe.tabIndex = -1;
         iframe.setAttribute('aria-hidden', 'true');
         iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;pointer-events:none;background:#fff;';
-
         host.appendChild(iframe);
         entry.frame.appendChild(host);
         entry.host = host;
