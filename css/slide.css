@@ -60,9 +60,9 @@
   --s13-right-content-y: 0px;      /* S13: 右側コンテンツ全体の上下位置 */
   --s13-box-gap: 24px;             /* S13: 分割したボックス間の余白量 */
 
-  --s14-top-text-y: 0px;           /* S14: 上部導入テキストの上下位置 */
-  --s14-cards-row-y: 0px;          /* S14: 左右ボックス行全体の上下位置 */
-  --s14-bottom-box-y: 0px;         /* S14: 下段強調ボックスの上下位置 */
+  --s14-top-text-y: -40px;           /* S14: 上部導入テキストの上下位置 */
+  --s14-cards-row-y: -30px;          /* S14: 左右ボックス行全体の上下位置 */
+  --s14-bottom-box-y: -15px;         /* S14: 下段強調ボックスの上下位置 */
 
   --s17-top-text-y: -80px;           /* S17: 上部導入テキストの上下位置 */
   --s17-cards-height: 530px;         /* S17: 3つのカードボックス自体の縦幅（高さ） */
@@ -77,6 +77,9 @@
   --s16-cards-y: -60px;      /* S16: カード列全体の上下位置 */
 
   --s18-body-y:-30px;                /* S18: コンテンツ全体の上下位置 */
+  --s18-card-height:600px;           /* S18: 3カードの高さ */
+  --s18-title-desc-gap:30px;         /* S18: タイトルと補足テキストの間隔 */
+  --s18-desc-photo-gap:8px;          /* S18: 補足テキストと写真の間隔 */
 
   --s19-photo-width:780px;            /* S19: フレームの横幅 */
   --s19-photo-height:780px;           /* S19: フレームの縦幅（autoでstretch） */
@@ -580,11 +583,11 @@ section.sbrk{
 }
 .s18-card{
   flex:1 1 0;
-  height:620px;
+  height:var(--s18-card-height);
   box-sizing:border-box;
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:0;
   padding:30px 32px 32px;
   border-top:8px solid var(--n);
 }
@@ -603,6 +606,7 @@ section.sbrk{
   line-height:1.22;
   font-weight:700;
   color:var(--n);
+  margin-bottom:var(--s18-title-desc-gap);
 }
 .s18-card-title .nbdg{
   width:52px;
@@ -624,10 +628,11 @@ section.sbrk{
   font-size:27px;
   line-height:1.35;
   color:var(--tm);
+  margin-bottom:var(--s18-desc-photo-gap);
 }
 .s18-card-photo{
   height:340px;
-  margin-top:auto;
+  margin-top:0;
   border-radius:12px;
   overflow:hidden;
   position:relative;
