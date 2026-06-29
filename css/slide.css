@@ -707,10 +707,14 @@ section.sbrk{
   gap: 20px;
 }
 
-/* S21 staff photo */
+/* S21 staff photo (img / video 共通) */
 .photo-s21-staff .photo-cover{
   transform:scale(var(--s21-photo-scale));
   transform-origin:center center;
+  object-position:var(--s21-photo-position);
+}
+.photo-s21-staff video.photo-cover{
+  object-fit:cover;
   object-position:var(--s21-photo-position);
 }
 
