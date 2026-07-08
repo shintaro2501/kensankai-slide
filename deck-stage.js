@@ -99,6 +99,10 @@
   const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
   const FINE_POINTER_MQ = matchMedia('(hover: hover) and (pointer: fine)');
   const NARROW_MQ = matchMedia('(max-width: 640px)');
+  const SCRIPT_SAFE_MODE_TOGGLE_CODE = 'KeyL';
+  const SCRIPT_SAFE_MODE_ALLOWED_CODES = new Set(['PageDown', 'PageUp', 'Escape']);
+  const SCRIPT_SAFE_MODE_BADGE_MS = 3500;
+  const SCRIPT_SAFE_MODE_TOAST_MS = 2000;
   // Slide-authored controls that should keep a tap instead of it navigating.
   const INTERACTIVE_SEL = 'a[href], button, input, select, textarea, summary, label, video[controls], audio[controls], [role="button"], [onclick], [tabindex]:not([tabindex^="-"]), [contenteditable]:not([contenteditable="false" i])';
 
@@ -207,6 +211,60 @@
     :host([data-fullscreen]),
     :host([data-fullscreen]) * { cursor: none !important; }
 
+    .script-safe-badge {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.92);
+      color: var(--n, #163d2d);
+      border: 1px solid var(--b, rgba(22,61,45,0.22));
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.2;
+      z-index: 2147483050;
+      pointer-events: none;
+      user-select: none;
+      font-feature-settings: "tnum" 1;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .script-safe-badge[data-visible] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .script-safe-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 72px;
+      transform: translate(-50%, 8px);
+      padding: 9px 14px;
+      background: var(--n, #163d2d);
+      color: #fff;
+      border: 1px solid var(--b, rgba(255,255,255,0.18));
+      border-radius: 8px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.2;
+      opacity: 0;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 2147483060;
+      pointer-events: none;
+      user-select: none;
+    }
+    .script-safe-toast[data-visible] {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
     .btn {
       appearance: none;
       -webkit-appearance: none;
@@ -229,6 +287,15 @@
     }
     .btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
     .btn:active { background: rgba(255,255,255,0.18); }
+    .btn[data-active] {
+      background: color-mix(in srgb, var(--n, #163d2d) 28%, transparent);
+      color: #fff;
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b, #2f7d5a) 55%, transparent);
+    }
+    .btn[data-active] .kbd {
+      background: color-mix(in srgb, var(--b, #2f7d5a) 55%, rgba(255,255,255,0.12));
+      color: #fff;
+    }
     .btn:focus { outline: none; }
     .btn:focus-visible { outline: none; }
     .btn::-moz-focus-inner { border: 0; }
@@ -274,6 +341,30 @@
       height: 14px;
       background: rgba(255,255,255,0.18);
       margin: 0 2px;
+    }
+    @media (max-width: 520px) {
+      .overlay {
+        max-width: calc(100vw - 16px);
+        gap: 2px;
+        padding: 4px 6px 4px 4px;
+      }
+      .btn.hint {
+        font-size: 10px;
+        padding: 0 6px 0 7px;
+        gap: 4px;
+      }
+      .btn.hint .kbd {
+        min-width: 14px;
+        height: 14px;
+        padding: 0 3px;
+        font-size: 9px;
+      }
+      .count {
+        min-width: 34px;
+        padding: 0 4px;
+        font-size: 11px;
+      }
+      .divider { margin: 0; }
     }
 
     /* ── Thumbnail rail ──────────────────────────────────────────────────
@@ -567,7 +658,8 @@
         page-break-after: auto;
       }
       ::slotted([data-deck-skip]) { display: none !important; }
-      .overlay, .rail, .rail-resize, .ctxmenu, .confirm-backdrop { display: none !important; }
+      .overlay, .rail, .rail-resize, .ctxmenu, .confirm-backdrop,
+      .script-safe-badge, .script-safe-toast { display: none !important; }
     }
   `;
 
@@ -585,6 +677,8 @@
       this._menuIndex = -1;
 
       this._onKey = this._onKey.bind(this);
+      this._onScriptSafeModeKey = this._onScriptSafeModeKey.bind(this);
+      this._onOverlayClickCapture = this._onOverlayClickCapture.bind(this);
       this._onResize = this._onResize.bind(this);
       this._onSlotChange = this._onSlotChange.bind(this);
       this._onMouseMove = this._onMouseMove.bind(this);
@@ -618,6 +712,7 @@
       this._render();
       this._loadNotes();
       this._syncPrintPageRule();
+      window.addEventListener('keydown', this._onScriptSafeModeKey, { capture: true });
       window.addEventListener('keydown', this._onKey);
       window.addEventListener('resize', this._onResize);
       window.addEventListener('mousemove', this._onMouseMove, { passive: true });
@@ -652,6 +747,7 @@
             if (this._hideTimer) clearTimeout(this._hideTimer);
           }
         } else {
+          if (this._scriptSafeMode) this._exitScriptSafeMode({ showToast: true });
           this.removeAttribute('data-fullscreen');
           document.documentElement.style.cursor = '';
         }
@@ -847,6 +943,7 @@
 
     disconnectedCallback() {
       window.removeEventListener('keydown', this._onKey);
+      window.removeEventListener('keydown', this._onScriptSafeModeKey, { capture: true });
       window.removeEventListener('resize', this._onResize);
       window.removeEventListener('mousemove', this._onMouseMove);
       window.removeEventListener('message', this._onMessage);
@@ -856,6 +953,8 @@
       if (this._freezeStyle) { this._freezeStyle.remove(); this._freezeStyle = null; }
       this.removeEventListener('click', this._onTap);
       if (this._hideTimer) clearTimeout(this._hideTimer);
+      if (this._scriptSafeBadgeTimer) clearTimeout(this._scriptSafeBadgeTimer);
+      if (this._scriptSafeToastTimer) clearTimeout(this._scriptSafeToastTimer);
       if (this._mouseIdleTimer) clearTimeout(this._mouseIdleTimer);
       if (this._liveTimer) clearTimeout(this._liveTimer);
       if (this._tweakTimer) clearTimeout(this._tweakTimer);
@@ -919,13 +1018,27 @@
         <button class="btn hint reset" type="button" aria-label="Reset to first slide" title="Reset (R)">Reset<span class="kbd">R</span></button>
         <button class="btn hint thumbs" type="button" aria-label="Toggle thumbnails" title="Thumbnails (T)">Thumbs<span class="kbd">T</span></button>
         <button class="btn hint present" type="button" aria-label="Enter presentation mode" title="Present (P)">Present<span class="kbd">P</span></button>
+        <button class="btn hint script" type="button" aria-label="Toggle script mode" title="Script mode (L)" aria-pressed="false">Script<span class="kbd">L</span></button>
       `;
 
+      overlay.addEventListener('click', this._onOverlayClickCapture, true);
       overlay.querySelector('.prev').addEventListener('click', () => this._advance(-1, 'click'));
       overlay.querySelector('.next').addEventListener('click', () => this._advance(1, 'click'));
       overlay.querySelector('.reset').addEventListener('click', () => this._go(0, 'click'));
       overlay.querySelector('.thumbs').addEventListener('click', () => this._toggleRail());
       overlay.querySelector('.present').addEventListener('click', () => this._enterPresentation());
+      overlay.querySelector('.script').addEventListener('click', () => this._toggleScriptSafeMode());
+
+      const scriptSafeBadge = document.createElement('div');
+      scriptSafeBadge.className = 'script-safe-badge export-hidden';
+      scriptSafeBadge.setAttribute('data-omelette-chrome', '');
+      scriptSafeBadge.textContent = '🔒 台本モード中　終了: Esc';
+
+      const scriptSafeToast = document.createElement('div');
+      scriptSafeToast.className = 'script-safe-toast export-hidden';
+      scriptSafeToast.setAttribute('role', 'status');
+      scriptSafeToast.setAttribute('aria-live', 'polite');
+      scriptSafeToast.setAttribute('data-omelette-chrome', '');
 
       // Thumbnail rail + context menu. Thumbnails are populated in
       // _renderRail() after _collectSlides().
@@ -1017,11 +1130,14 @@
         this._deleteSlide(i);
       });
 
-      this._root.append(style, rail, resize, stage, overlay, menu, confirm);
+      this._root.append(style, rail, resize, stage, overlay, scriptSafeBadge, scriptSafeToast, menu, confirm);
       this._canvas = canvas;
       this._stage = stage;
       this._slot = slot;
       this._overlay = overlay;
+      this._scriptSafeButton = overlay.querySelector('.script');
+      this._scriptSafeBadge = scriptSafeBadge;
+      this._scriptSafeToast = scriptSafeToast;
       this._rail = rail;
       this._resize = resize;
       this._menu = menu;
@@ -1360,6 +1476,14 @@
       // Ignore when the user is typing.
       const t = e.target;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      if (this._scriptSafeMode && e.key === 'Escape') {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+        this._exitScriptSafeMode({ showToast: true });
+        e.preventDefault();
+        return;
+      }
       // Confirm dialog swallows nav keys while open; Escape cancels. Enter
       // is left to the focused button's native activation so Tab→Cancel
       // →Enter activates Cancel, not the window-level confirm path.
@@ -1391,6 +1515,8 @@
         this._toggleRail();
       } else if (key === 'p' || key === 'P') {
         this._enterPresentation();
+      } else if (e.code === SCRIPT_SAFE_MODE_TOGGLE_CODE) {
+        this._toggleScriptSafeMode();
       } else if (/^[0-9]$/.test(key)) {
         // 1..9 jump to that slide; 0 jumps to 10.
         const n = key === '0' ? 9 : parseInt(key, 10) - 1;
@@ -1403,6 +1529,115 @@
         e.preventDefault();
         this._flashOverlay();
       }
+    }
+
+    _onScriptSafeModeKey(e) {
+      const t = e.target;
+      const isTyping = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+
+      if (!this._scriptSafeMode) {
+        if (!isTyping && !e.metaKey && !e.ctrlKey && !e.altKey && e.code === SCRIPT_SAFE_MODE_TOGGLE_CODE) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          this._enterScriptSafeMode();
+        }
+        return;
+      }
+
+      if (e.code === SCRIPT_SAFE_MODE_TOGGLE_CODE) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        this._toggleScriptSafeMode();
+        return;
+      }
+
+      // Browser KeyboardEvent cannot distinguish the Kokuyo clicker from
+      // the physical keyboard, so physical PageDown/PageUp/Escape are
+      // intentionally allowed through. OS-level shortcuts such as Alt+F4,
+      // the Windows key, and Ctrl+Alt+Delete cannot be blocked by JavaScript.
+      if (SCRIPT_SAFE_MODE_ALLOWED_CODES.has(e.code)) return;
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      this._showScriptSafeBadge();
+    }
+
+    _onOverlayClickCapture(e) {
+      if (!this._scriptSafeMode) return;
+      const path = e.composedPath ? e.composedPath() : [];
+      const isScriptButton = path.some((n) => n && n.classList && n.classList.contains('script'));
+      if (isScriptButton) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+
+    _toggleScriptSafeMode() {
+      if (this._scriptSafeMode) {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+        this._exitScriptSafeMode({ showToast: true });
+      } else {
+        this._enterScriptSafeMode();
+      }
+    }
+
+    _enterScriptSafeMode() {
+      if (!this._scriptSafeMode) {
+        this._scriptSafeMode = true;
+        this.setAttribute('data-script-safe-mode', '');
+        this._syncScriptSafeModeUi();
+      }
+      this._enterPresentation();
+      this._showScriptSafeBadge();
+      this._showScriptSafeToast('台本モードに入りました');
+    }
+
+    _exitScriptSafeMode({ showToast = false } = {}) {
+      if (!this._scriptSafeMode) return;
+      this._scriptSafeMode = false;
+      this.removeAttribute('data-script-safe-mode');
+      this._syncScriptSafeModeUi();
+      this._hideScriptSafeBadge();
+      if (showToast) this._showScriptSafeToast('台本モードを終了しました');
+    }
+
+    _syncScriptSafeModeUi() {
+      if (!this._scriptSafeButton) return;
+      if (this._scriptSafeMode) {
+        this._scriptSafeButton.setAttribute('data-active', '');
+        this._scriptSafeButton.setAttribute('aria-pressed', 'true');
+      } else {
+        this._scriptSafeButton.removeAttribute('data-active');
+        this._scriptSafeButton.setAttribute('aria-pressed', 'false');
+      }
+    }
+
+    _showScriptSafeToast(message) {
+      if (!this._scriptSafeToast) return;
+      this._scriptSafeToast.textContent = message;
+      this._scriptSafeToast.setAttribute('data-visible', '');
+      if (this._scriptSafeToastTimer) clearTimeout(this._scriptSafeToastTimer);
+      this._scriptSafeToastTimer = setTimeout(() => {
+        this._scriptSafeToast.removeAttribute('data-visible');
+      }, SCRIPT_SAFE_MODE_TOAST_MS);
+    }
+
+    _showScriptSafeBadge() {
+      if (!this._scriptSafeBadge) return;
+      this._scriptSafeBadge.setAttribute('data-visible', '');
+      if (this._scriptSafeBadgeTimer) clearTimeout(this._scriptSafeBadgeTimer);
+      this._scriptSafeBadgeTimer = setTimeout(() => {
+        this._scriptSafeBadge.removeAttribute('data-visible');
+      }, SCRIPT_SAFE_MODE_BADGE_MS);
+    }
+
+    _hideScriptSafeBadge() {
+      if (this._scriptSafeBadgeTimer) {
+        clearTimeout(this._scriptSafeBadgeTimer);
+        this._scriptSafeBadgeTimer = null;
+      }
+      if (this._scriptSafeBadge) this._scriptSafeBadge.removeAttribute('data-visible');
     }
 
     _toggleRail() {
