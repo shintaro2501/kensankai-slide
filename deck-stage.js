@@ -1544,13 +1544,6 @@
         return;
       }
 
-      if (e.code === SCRIPT_SAFE_MODE_TOGGLE_CODE) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        this._toggleScriptSafeMode();
-        return;
-      }
-
       // Browser KeyboardEvent cannot distinguish the Kokuyo clicker from
       // the physical keyboard, so physical PageDown/PageUp/Escape are
       // intentionally allowed through. OS-level shortcuts such as Alt+F4,
@@ -1573,10 +1566,7 @@
 
     _toggleScriptSafeMode() {
       if (this._scriptSafeMode) {
-        if (document.fullscreenElement) {
-          document.exitFullscreen().catch(() => {});
-        }
-        this._exitScriptSafeMode({ showToast: true });
+        return;
       } else {
         this._enterScriptSafeMode();
       }
